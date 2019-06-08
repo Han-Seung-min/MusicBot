@@ -1,4 +1,4 @@
-package com.jagrosh.jmusicbot.commands.owner;
+package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 
@@ -11,10 +11,7 @@ public class MusicCommandArgument {
 
     private PlayerManager players;
     public PlayerManager getPlayers() { return this.players; }
-    public void setPlayers(PlayerManager players) { this.players = players; }
 
     private String emogi;
     public String getEmogi() { return this.emogi; }
-    public void setEmogi(String emogi) { this.emogi = emogi; }
-}
 }

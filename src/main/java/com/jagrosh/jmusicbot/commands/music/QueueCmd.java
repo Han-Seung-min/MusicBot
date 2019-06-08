@@ -39,17 +39,24 @@ public class QueueCmd extends MusicCommand
 {
     private final static String REPEAT = "\uD83D\uDD01"; // 🔁
     
-    private final Paginator.Builder builder;
+    private Paginator.Builder builder;
     
-    public QueueCmd(PlayerManager players)
+    public QueueCmd()
     {
-        super(players);
+        super();
         this.name = "queue";
         this.help = "shows the current queue";
         this.arguments = "[pagenum]";
         this.aliases = new String[]{"list"};
         this.bePlaying = true;
         this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
+
+    }
+
+    @Override
+    public MusicCommand Initialize(MusicCommandArgument argument) {
+        MusicCommand command = super.Initialize(argument);
+
         builder = new Paginator.Builder()
                 .setColumns(1)
                 .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException ignore){}})
@@ -57,8 +64,10 @@ public class QueueCmd extends MusicCommand
                 .waitOnSinglePage(false)
                 .useNumberedItems(true)
                 .showPageNumbers(true)
-                .setEventWaiter(players.getPlayer().getWaiter())
+                .setEventWaiter(getPlayers().getPlayer().getWaiter())
                 .setTimeout(1, TimeUnit.MINUTES);
+
+        return command;
     }
 
     @Override
@@ -82,7 +91,7 @@ public class QueueCmd extends MusicCommand
             event.reply(built, m -> 
             {
                 if(nowp!=null)
-                	players.getNowplayingHandler().setLastNPMessage(m);
+                	getPlayers().getNowplayingHandler().setLastNPMessage(m);
             });
             return;
         }

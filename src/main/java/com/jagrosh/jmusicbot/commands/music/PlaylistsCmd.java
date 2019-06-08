@@ -26,9 +26,9 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
  */
 public class PlaylistsCmd extends MusicCommand 
 {
-    public PlaylistsCmd(PlayerManager players)
+    public PlaylistsCmd()
     {
-        super(players);
+        super();
         this.name = "playlists";
         this.help = "shows the available playlists";
         this.aliases = new String[]{"pls"};
@@ -40,14 +40,14 @@ public class PlaylistsCmd extends MusicCommand
     @Override
     public void doCommand(CommandEvent event) 
     {
-        if(!players.getPlaylistLoader().folderExists())
-            players.getPlaylistLoader().createFolder();
-        if(!players.getPlaylistLoader().folderExists())
+        if(!getPlayers().getPlaylistLoader().folderExists())
+            getPlayers().getPlaylistLoader().createFolder();
+        if(!getPlayers().getPlaylistLoader().folderExists())
         {
             event.reply(event.getClient().getWarning()+" Playlists folder does not exist and could not be created!");
             return;
         }
-        List<String> list = players.getPlaylistLoader().getPlaylistNames();
+        List<String> list = getPlayers().getPlaylistLoader().getPlaylistNames();
         if(list==null)
             event.reply(event.getClient().getError()+" Failed to load available playlists!");
         else if(list.isEmpty())

@@ -15,6 +15,7 @@
  */
 package com.jagrosh.jmusicbot;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -25,7 +26,11 @@ import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.Player;
 import com.jagrosh.jmusicbot.audio.PlayerConfig;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
+import com.jagrosh.jmusicbot.commands.MusicCommand;
+import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
 import com.jagrosh.jmusicbot.commands.admin.*;
+import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.CommandsBuilder;
+import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.music.MusicCommandsBuilder;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
 import com.jagrosh.jmusicbot.commands.music.*;
@@ -38,6 +43,7 @@ import com.jagrosh.jmusicbot.settings.SettingsManager;
 import com.jagrosh.jmusicbot.shutdown.ShutdownListener;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Game;
@@ -105,7 +111,60 @@ public class JMusicBot
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
-        
+
+
+        // configure all commands
+        ArrayList<Command> commands = new ArrayList<>();
+        commands.add(aboutCommand);
+        commands.add(new PingCommand());
+        commands.add(new SettingsCmd());
+
+        MusicCommandsBuilder musicCommandBuilder = new MusicCommandsBuilder(new MusicCommandArgument(playermanager, config.getLoading()));
+        commands.addAll(
+                musicCommandBuilder
+                //region configure Music Commands
+                    .setEmogi("")
+                    .addLyricsCmd()
+                    .addNowPlayingCmd()
+
+                    .setEmogi(config.getLoading())
+                    .addPlayCmd()
+
+                    .setEmogi("")
+                    .addPlaylistsCmd()
+                    .addQueueCmd()
+                    .addRemoveCmd()
+
+                    .setEmogi(config.getSearching())
+                    .addSearchCmd()
+                    .addSCSearchCmd()
+
+                    .setEmogi("")
+                    .addShuffleCmd()
+                    .addSkipCmd()
+                    //endregion
+                .Build()
+        );
+
+        commands.add(new ForceskipCmd());
+        commands.add(new MoveTrackCmd());
+        commands.add(new PauseCmd());
+        commands.add(new PlaynextCmd(playermanager, config.getLoading()));
+        commands.add(new RepeatCmd());
+        commands.add(new SkiptoCmd());
+        commands.add(new StopCmd());
+        commands.add(new VolumeCmd());
+        commands.add(new SetdjCmd());
+        commands.add(new SettcCmd());
+        commands.add(new SetvcCmd());
+
+        commands.add(new AutoplaylistCmd(playlists));
+        commands.add(new PlaylistCmd(playlists));
+        commands.add(new SetavatarCmd());
+        commands.add(new SetgameCmd());
+        commands.add(new SetnameCmd());
+        commands.add(new SetstatusCmd());
+
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
@@ -115,41 +174,8 @@ public class JMusicBot
                 .setHelpWord(config.getHelp())
                 .setLinkedCacheSize(200)
                 .setGuildSettingsManager(settings)
-                .addCommands(aboutCommand,
-                        new PingCommand(),
-                        new SettingsCmd(),
-                        
-                        new LyricsCmd(),
-                        new NowplayingCmd(playermanager),
-                        new PlayCmd(playermanager, config.getLoading()),
-                        new PlaylistsCmd(playermanager),
-                        new QueueCmd(playermanager),
-                        new RemoveCmd(),
-                        new SearchCmd(playermanager, config.getSearching()),
-                        new SCSearchCmd(playermanager, config.getSearching()),
-                        new ShuffleCmd(),
-                        new SkipCmd(),
-                        
-                        new ForceskipCmd(),
-                        new MoveTrackCmd(),
-                        new PauseCmd(),
-                        new PlaynextCmd(playermanager, config.getLoading()),
-                        new RepeatCmd(),
-                        new SkiptoCmd(),
-                        new StopCmd(),
-                        new VolumeCmd(),
-                        
-                        new SetdjCmd(),
-                        new SettcCmd(),
-                        new SetvcCmd(),
-                        
-                        new AutoplaylistCmd(playlists),
-                        new PlaylistCmd(playlists),
-                        new SetavatarCmd(),
-                        new SetgameCmd(),
-                        new SetnameCmd(),
-                        new SetstatusCmd()
-                );
+                .addCommands(commands.toArray(new Command[commands.size()]));
+
         if(config.useEval())
             cb.addCommand(new EvalCmd(bot));
         boolean nogame = false;

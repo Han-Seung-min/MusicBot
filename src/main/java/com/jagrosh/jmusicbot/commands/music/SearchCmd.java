@@ -38,13 +38,11 @@ import net.dv8tion.jda.core.entities.Message;
 public class SearchCmd extends MusicCommand 
 {
     protected String searchPrefix = "ytsearch:";
-    private final OrderedMenu.Builder builder;
-    private final String searchingEmoji;
+    private OrderedMenu.Builder builder;
     
-    public SearchCmd(PlayerManager players, String searchingEmoji)
+    public SearchCmd()
     {
-        super(players);
-        this.searchingEmoji = searchingEmoji;
+        super();
         this.name = "search";
         this.aliases = new String[]{"ytsearch"};
         this.arguments = "<query>";
@@ -52,13 +50,23 @@ public class SearchCmd extends MusicCommand
         this.beListening = true;
         this.bePlaying = false;
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
+
+    }
+
+    @Override
+    public MusicCommand Initialize(MusicCommandArgument argument) {
+        MusicCommand command = super.Initialize(argument);
+
         builder = new OrderedMenu.Builder()
                 .allowTextInput(true)
                 .useNumbers()
                 .useCancelButton(true)
-                .setEventWaiter(players.getPlayer().getWaiter())
+                .setEventWaiter(getPlayers().getPlayer().getWaiter())
                 .setTimeout(1, TimeUnit.MINUTES);
+
+        return command;
     }
+
     @Override
     public void doCommand(CommandEvent event) 
     {
@@ -67,8 +75,8 @@ public class SearchCmd extends MusicCommand
             event.replyError("Please include a query.");
             return;
         }
-        event.reply(searchingEmoji+" Searching... `["+event.getArgs()+"]`", 
-                m -> players.loadItemOrdered(event.getGuild(), searchPrefix + event.getArgs(), new ResultHandler(m,event)));
+        event.reply(getEmogi()+" Searching... `["+event.getArgs()+"]`",
+                m -> getPlayers().loadItemOrdered(event.getGuild(), searchPrefix + event.getArgs(), new ResultHandler(m,event)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler 
@@ -85,10 +93,10 @@ public class SearchCmd extends MusicCommand
         @Override
         public void trackLoaded(AudioTrack track)
         {
-            if(players.getPlaylistLoader().isTooLong(track))
+            if(getPlayers().getPlaylistLoader().isTooLong(track))
             {
                 m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                        +FormatUtil.formatTime(track.getDuration())+"` > `"+players.getPlayerConfig().getMaxTime()+"`")).queue();
+                        +FormatUtil.formatTime(track.getDuration())+"` > `"+ getPlayers().getPlayerConfig().getMaxTime()+"`")).queue();
                 return;
             }
             AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
@@ -107,10 +115,10 @@ public class SearchCmd extends MusicCommand
                     .setSelection((msg,i) -> 
                     {
                         AudioTrack track = playlist.getTracks().get(i-1);
-                        if(players.getPlaylistLoader().isTooLong(track))
+                        if(getPlayers().getPlaylistLoader().isTooLong(track))
                         {
                             event.replyWarning("This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                                    +FormatUtil.formatTime(track.getDuration())+"` > `"+players.getPlayerConfig().getMaxTime()+"`");
+                                    +FormatUtil.formatTime(track.getDuration())+"` > `"+ getPlayers().getPlayerConfig().getMaxTime()+"`");
                             return;
                         }
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();

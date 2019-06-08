@@ -34,20 +34,16 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  */
 public abstract class MusicCommand extends Command 
 {
-    protected final PlayerManager players;
+    private MusicCommandArgument commonArgument;
+    protected PlayerManager getPlayers() { return commonArgument.getPlayers(); }
+    protected String getEmogi() { return commonArgument.getEmogi(); }
+
+
     protected boolean bePlaying;
     protected boolean beListening;
     
     public MusicCommand()
     {
-    	players = null;
-        this.guildOnly = true;
-        this.category = new Category("Music");
-    }
-    
-    public MusicCommand(PlayerManager players)
-    {
-        this.players = players;
         this.guildOnly = true;
         this.category = new Category("Music");
     }
@@ -69,8 +65,8 @@ public abstract class MusicCommand extends Command
             event.replyInDm(eventClient.getError()+" You can only use that command in "+tchannel.getAsMention()+"!");
             return;
         }
-        
-        players.setUpHandler(eventGuild); // no point constantly checking for this later
+
+        getPlayers().setUpHandler(eventGuild); // no point constantly checking for this later
         if(bePlaying && !((AudioHandler)eventGuild.getAudioManager().getSendingHandler()).isMusicPlaying(event.getJDA()))
         {
             event.reply(eventClient.getError()+" There must be music playing to use that!");
@@ -110,6 +106,12 @@ public abstract class MusicCommand extends Command
 		}
 		return false;
 	}
-    
+
+	public MusicCommand Initialize(MusicCommandArgument argument)
+    {
+        this.commonArgument = argument;
+        return this;
+    }
+
     public abstract void doCommand(CommandEvent event);
 }

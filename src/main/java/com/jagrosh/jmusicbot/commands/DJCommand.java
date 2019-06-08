@@ -44,7 +44,7 @@ public abstract class DJCommand extends MusicCommand
     }
     public DJCommand(PlayerManager players)
     {
-        super(players);
+        super();
         this.category = new Category("DJ", event -> 
         {
             if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))

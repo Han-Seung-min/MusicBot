@@ -23,9 +23,9 @@ import com.jagrosh.jmusicbot.audio.PlayerManager;
  */
 public class SCSearchCmd extends SearchCmd 
 {
-    public SCSearchCmd(PlayerManager players, String searchingEmoji)
+    public SCSearchCmd()
     {
-        super(players, searchingEmoji);
+        super();
         this.searchPrefix = "scsearch:";
         this.name = "scsearch";
         this.help = "searches Soundcloud for a provided query";

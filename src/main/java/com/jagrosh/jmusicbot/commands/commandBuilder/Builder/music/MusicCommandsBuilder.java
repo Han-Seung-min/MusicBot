@@ -2,51 +2,94 @@ package com.jagrosh.jmusicbot.commands.commandBuilder.Builder.music;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
-import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.CommandBuilder;
-import com.jagrosh.jmusicbot.commands.music.LyricsCmd;
-import com.jagrosh.jmusicbot.commands.music.NowplayingCmd;
+import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
+import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.CommandsBuilder;
+import com.jagrosh.jmusicbot.commands.music.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class MusicCommandBuilder extends CommandBuilder <MusicCommand, MusicCommand.MusicCommandArgument>  {
+public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCommandArgument> {
 
-    protected MusicCommandBuilder(Argument<MusicCommand.MusicCommandArgument> argument)
+    public MusicCommandsBuilder(MusicCommandArgument argument)
     {
-        Initialize(argument);
-
+        Initialize(new Argument<MusicCommandArgument>(argument));
         createdCommands = new ArrayList<>();
     }
 
-    private Argument<MusicCommand.MusicCommandArgument> argument;
+    private Argument<MusicCommandArgument> argument;
     private final List<MusicCommand> createdCommands;
 
     @Override
-    protected void Initialize(Argument<MusicCommand.MusicCommandArgument> argument) {
+    protected void Initialize(Argument<MusicCommandArgument> argument) {
         this.argument = argument;
     }
 
     @Override
-    public Command Build() {
-        return createdCommands.toArray();
+    public Collection<Command> Build() {
+        Collection<Command> commands = new ArrayList<>(createdCommands);
+        createdCommands.clear();
+
+        return commands;
     }
 
-    public void addLyricsCommand()
-    {
-
-    }
-    public MusicCommand build(LyricsCmd command, Argument<MusicCommand.MusicCommandArgument> argument)
-    {
-        return initializeCmd(command, argument);
-    }
-    public MusicCommand build(NowplayingCmd command, Argument<MusicCommand.MusicCommandArgument> argument)
-    {
-        return initializeCmd(command, argument);
+    // TODO : Change Emogi to Null Object Pattern
+    public MusicCommandsBuilder setEmogi(String emogi) {
+        this.argument = new Argument<MusicCommandArgument>(new MusicCommandArgument(this.argument.GetArgument().getPlayers(), emogi));
+        return this;
     }
 
-    private MusicCommand initializeCmd(MusicCommand cmd, Argument<MusicCommand.MusicCommandArgument> argument)
+    // Add Commands
+    public MusicCommandsBuilder addLyricsCmd() {
+        addCmd(new LyricsCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addNowPlayingCmd() {
+        addCmd(new NowplayingCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addPlayCmd() {
+        addCmd(new PlayCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addPlaylistsCmd() {
+        addCmd(new PlaylistsCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addQueueCmd() {
+        addCmd(new QueueCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addRemoveCmd() {
+        addCmd(new RemoveCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addSCSearchCmd() {
+        addCmd(new SCSearchCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addSearchCmd() {
+        addCmd(new SearchCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addShuffleCmd() {
+        addCmd(new ShuffleCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addSkipCmd() {
+        addCmd(new SkipCmd());
+        return this;
+    }
+
+    private void addCmd(MusicCommand cmd)
     {
-        return cmd.Initialize(argument.GetArgument());
+        createdCommands.add(initializeCmd(cmd, this.argument));
+    }
+    private MusicCommand initializeCmd(MusicCommand cmd, Argument<MusicCommandArgument> argument) {
+        cmd.Initialize(argument.GetArgument());
+        return cmd;
     }
 }
 

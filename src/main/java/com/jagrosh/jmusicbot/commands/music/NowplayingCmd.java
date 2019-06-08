@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
@@ -28,9 +27,9 @@ import net.dv8tion.jda.core.entities.Message;
  */
 public class NowplayingCmd extends MusicCommand 
 {
-    public NowplayingCmd(PlayerManager players)
+    public NowplayingCmd()
     {
-        super(players);
+        super();
         this.name = "nowplaying";
         this.help = "shows the song that is currently playing";
         this.aliases = new String[]{"np","current"};
@@ -45,11 +44,11 @@ public class NowplayingCmd extends MusicCommand
         if(m==null)
         {
             event.reply(handler.getNoMusicPlaying(event.getJDA()));
-            players.getNowplayingHandler().clearLastNPMessage(event.getGuild());
+            getPlayers().getNowplayingHandler().clearLastNPMessage(event.getGuild());
         }
         else
         {
-            event.reply(m, msg -> players.getNowplayingHandler().setLastNPMessage(msg));
+            event.reply(m, msg -> getPlayers().getNowplayingHandler().setLastNPMessage(msg));
         }
     }
 }
