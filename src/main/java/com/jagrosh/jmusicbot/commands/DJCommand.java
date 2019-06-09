@@ -15,6 +15,8 @@
  */
 package com.jagrosh.jmusicbot.commands;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.core.Permission;
@@ -24,11 +26,15 @@ import net.dv8tion.jda.core.entities.Role;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public abstract class DJCommand extends MusicCommand
+public final class DJCommand extends Command implements IMusicCommand
 {
-    public DJCommand()
+    // HACK : DJCommand is used like proxy to avoid inherit MusicCommand.
+    public DJCommand(MusicCommand musicCommand)
     {
         super();
+
+        this.musicCommand = musicCommand;
+
         this.category = new Category("DJ", event -> 
         {
             if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
@@ -42,20 +48,17 @@ public abstract class DJCommand extends MusicCommand
             return dj!=null && (event.getMember().getRoles().contains(dj) || dj.getIdLong()==event.getGuild().getIdLong());
         });
     }
-    public DJCommand(PlayerManager players)
+
+    private MusicCommand musicCommand;
+
+    @Override
+    protected final void execute(CommandEvent event) {
+        this.musicCommand.execute(event);
+    }
+
+    @Override
+    public final void doCommand(CommandEvent event)
     {
-        super();
-        this.category = new Category("DJ", event -> 
-        {
-            if(event.getAuthor().getId().equals(event.getClient().getOwnerId()))
-                return true;
-            if(event.getGuild()==null)
-                return true;
-            if(event.getMember().hasPermission(Permission.MANAGE_SERVER))
-                return true;
-            Settings settings = event.getClient().getSettingsFor(event.getGuild());
-            Role dj = settings.getRole(event.getGuild());
-            return dj!=null && (event.getMember().getRoles().contains(dj) || dj.getIdLong()==event.getGuild().getIdLong());
-        });
+        this.musicCommand.doCommand(event);
     }
 }

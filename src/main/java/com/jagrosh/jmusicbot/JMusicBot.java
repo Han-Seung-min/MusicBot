@@ -26,14 +26,11 @@ import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.Player;
 import com.jagrosh.jmusicbot.audio.PlayerConfig;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
-import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
 import com.jagrosh.jmusicbot.commands.admin.*;
-import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.CommandsBuilder;
 import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.music.MusicCommandsBuilder;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
-import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
@@ -105,6 +102,12 @@ public class JMusicBot
         PlayerManager playermanager = new PlayerManager((Player)bot, nowplaying, (PlayerConfig)config, playlists);
         playermanager.init();
 
+
+        //<editor-fold desc="Create Commands">
+        // configure all commands
+        ArrayList<Command> commands = new ArrayList<>(); // container for delivering commands
+
+        // about command
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
                                 "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
@@ -113,16 +116,16 @@ public class JMusicBot
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
 
 
-        // configure all commands
-        ArrayList<Command> commands = new ArrayList<>();
         commands.add(aboutCommand);
         commands.add(new PingCommand());
         commands.add(new SettingsCmd());
 
+        // Music command
         MusicCommandsBuilder musicCommandBuilder = new MusicCommandsBuilder(new MusicCommandArgument(playermanager, config.getLoading()));
         commands.addAll(
+                //configure Music Commands
                 musicCommandBuilder
-                //region configure Music Commands
+                    // create normal music commands
                     .setEmogi("")
                     .addLyricsCmd()
                     .addNowPlayingCmd()
@@ -142,18 +145,23 @@ public class JMusicBot
                     .setEmogi("")
                     .addShuffleCmd()
                     .addSkipCmd()
-                    //endregion
+
+                    // create DJ Music Commands
+                    .addForceskipCmd()
+                    .addMoveTrackCmd()
+                    .addPauseCmd()
+
+                    .setEmogi(config.getLoading())
+                    .addPlaynextCmd()
+
+                    .setEmogi("")
+                    .addRepeatCmd()
+                    .addSkiptoCmd()
+                    .addStopCmd()
+                    .addVolumeCmd()
                 .Build()
         );
 
-        commands.add(new ForceskipCmd());
-        commands.add(new MoveTrackCmd());
-        commands.add(new PauseCmd());
-        commands.add(new PlaynextCmd(playermanager, config.getLoading()));
-        commands.add(new RepeatCmd());
-        commands.add(new SkiptoCmd());
-        commands.add(new StopCmd());
-        commands.add(new VolumeCmd());
         commands.add(new SetdjCmd());
         commands.add(new SettcCmd());
         commands.add(new SetvcCmd());
@@ -164,6 +172,7 @@ public class JMusicBot
         commands.add(new SetgameCmd());
         commands.add(new SetnameCmd());
         commands.add(new SetstatusCmd());
+        //</editor-fold>
 
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()

@@ -16,14 +16,14 @@
 package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class RepeatCmd extends DJCommand
+public class RepeatCmd extends MusicCommand
 {
     public RepeatCmd()
     {

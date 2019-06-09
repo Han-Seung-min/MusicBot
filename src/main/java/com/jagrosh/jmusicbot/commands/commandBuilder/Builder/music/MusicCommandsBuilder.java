@@ -1,12 +1,15 @@
 package com.jagrosh.jmusicbot.commands.commandBuilder.Builder.music;
 
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
 import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.CommandsBuilder;
+import com.jagrosh.jmusicbot.commands.dj.ForceskipCmd;
+import com.jagrosh.jmusicbot.commands.dj.MoveTrackCmd;
 import com.jagrosh.jmusicbot.commands.music.*;
+import com.jagrosh.jmusicbot.commands.dj.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +23,7 @@ public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCom
     }
 
     private Argument<MusicCommandArgument> argument;
-    private final List<MusicCommand> createdCommands;
+    private final List<Command> createdCommands;
 
     @Override
     protected void Initialize(Argument<MusicCommandArgument> argument) {
@@ -35,57 +38,108 @@ public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCom
         return commands;
     }
 
-    // TODO : Change Emogi to Null Object Pattern
     public MusicCommandsBuilder setEmogi(String emogi) {
         this.argument = new Argument<MusicCommandArgument>(new MusicCommandArgument(this.argument.GetArgument().getPlayers(), emogi));
         return this;
     }
 
+    public enum CATEGORY
+    {
+        NORMAL              ,
+        DJ
+    }
+
     // Add Commands
     public MusicCommandsBuilder addLyricsCmd() {
-        addCmd(new LyricsCmd());
+        addCmd(CATEGORY.NORMAL, new LyricsCmd());
         return this;
     }
     public MusicCommandsBuilder addNowPlayingCmd() {
-        addCmd(new NowplayingCmd());
+        addCmd(CATEGORY.NORMAL, new NowplayingCmd());
         return this;
     }
     public MusicCommandsBuilder addPlayCmd() {
-        addCmd(new PlayCmd());
+        addCmd(CATEGORY.NORMAL, new PlayCmd());
         return this;
     }
     public MusicCommandsBuilder addPlaylistsCmd() {
-        addCmd(new PlaylistsCmd());
+        addCmd(CATEGORY.NORMAL, new PlaylistsCmd());
         return this;
     }
     public MusicCommandsBuilder addQueueCmd() {
-        addCmd(new QueueCmd());
+        addCmd(CATEGORY.NORMAL, new QueueCmd());
         return this;
     }
     public MusicCommandsBuilder addRemoveCmd() {
-        addCmd(new RemoveCmd());
+        addCmd(CATEGORY.NORMAL, new RemoveCmd());
         return this;
     }
     public MusicCommandsBuilder addSCSearchCmd() {
-        addCmd(new SCSearchCmd());
+        addCmd(CATEGORY.NORMAL, new SCSearchCmd());
         return this;
     }
     public MusicCommandsBuilder addSearchCmd() {
-        addCmd(new SearchCmd());
+        addCmd(CATEGORY.NORMAL, new SearchCmd());
         return this;
     }
     public MusicCommandsBuilder addShuffleCmd() {
-        addCmd(new ShuffleCmd());
+        addCmd(CATEGORY.NORMAL, new ShuffleCmd());
         return this;
     }
     public MusicCommandsBuilder addSkipCmd() {
-        addCmd(new SkipCmd());
+        addCmd(CATEGORY.NORMAL, new SkipCmd());
         return this;
     }
 
-    private void addCmd(MusicCommand cmd)
+    public MusicCommandsBuilder addForceskipCmd() {
+        addCmd(CATEGORY.DJ, new ForceskipCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addMoveTrackCmd() {
+        addCmd(CATEGORY.DJ, new MoveTrackCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addPauseCmd() {
+        addCmd(CATEGORY.DJ, new PauseCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addPlaynextCmd() {
+        addCmd(CATEGORY.DJ, new PlaynextCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addRepeatCmd() {
+        addCmd(CATEGORY.DJ, new RepeatCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addSkiptoCmd() {
+        addCmd(CATEGORY.DJ, new SkiptoCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addStopCmd() {
+        addCmd(CATEGORY.DJ, new StopCmd());
+        return this;
+    }
+    public MusicCommandsBuilder addVolumeCmd() {
+        addCmd(CATEGORY.DJ, new VolumeCmd());
+        return this;
+    }
+
+    private void addCmd(CATEGORY category , MusicCommand cmd)
     {
-        createdCommands.add(initializeCmd(cmd, this.argument));
+        switch (category)
+        {
+            case NORMAL:
+                createdCommands.add(initializeCmd(cmd, this.argument));
+                break;
+
+            case DJ:
+                createdCommands.add(new DJCommand(initializeCmd(cmd, this.argument)));
+                break;
+
+            default: // default : NORMAL
+                createdCommands.add(initializeCmd(cmd, this.argument));
+                break;
+        }
     }
     private MusicCommand initializeCmd(MusicCommand cmd, Argument<MusicCommandArgument> argument) {
         cmd.Initialize(argument.GetArgument());

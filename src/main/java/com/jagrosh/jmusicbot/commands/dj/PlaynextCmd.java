@@ -19,7 +19,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
-import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -31,14 +31,11 @@ import net.dv8tion.jda.core.entities.Message;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class PlaynextCmd extends DJCommand
+public class PlaynextCmd extends MusicCommand
 {
-    private final String loadingEmoji;
-    
-    public PlaynextCmd(PlayerManager players, String loadingEmoji)
+    public PlaynextCmd()
     {
-        super(players);
-        this.loadingEmoji = loadingEmoji;
+        super();
         this.name = "playnext";
         this.arguments = "<title|URL>";
         this.help = "plays a single song next";
@@ -57,7 +54,7 @@ public class PlaynextCmd extends DJCommand
         String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">") 
                 ? event.getArgs().substring(1,event.getArgs().length()-1) 
                 : event.getArgs().isEmpty() ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
-        event.reply(loadingEmoji+" Loading... `["+args+"]`", m -> getPlayers().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
+        event.reply(getEmogi() +" Loading... `["+args+"]`", m -> getPlayers().loadItemOrdered(event.getGuild(), args, new ResultHandler(m,event,false)));
     }
     
     private class ResultHandler implements AudioLoadResultHandler

@@ -32,7 +32,7 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public abstract class MusicCommand extends Command 
+public abstract class MusicCommand extends Command implements IMusicCommand
 {
     private MusicCommandArgument commonArgument;
     protected PlayerManager getPlayers() { return commonArgument.getPlayers(); }
