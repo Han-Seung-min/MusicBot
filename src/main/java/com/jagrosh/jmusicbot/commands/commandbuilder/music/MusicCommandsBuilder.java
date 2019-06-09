@@ -8,6 +8,7 @@ import com.jagrosh.jmusicbot.commands.commandbuilder.CommandsBuilder;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.music.*;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -142,5 +143,3 @@ public class MusicCommandsBuilder extends CommandsBuilder<Command, MusicCommandA
         return cmd;
     }
 }
-
-

@@ -5,10 +5,10 @@ import com.jagrosh.jdautilities.command.Command;
 import java.util.Collection;
 
 
-public abstract class CommandsBuilder<RETURNTYPE extends Command, ARGUMENT> {
+public abstract class CommandsBuilder<RETURN extends Command, ARGUMENT> {
 
     protected abstract void initialize(Argument<ARGUMENT> argument);
-    public abstract Collection<RETURNTYPE> build();
+    public abstract Collection<RETURN> build();
 
 
     public class Argument <ARGUMENT>
