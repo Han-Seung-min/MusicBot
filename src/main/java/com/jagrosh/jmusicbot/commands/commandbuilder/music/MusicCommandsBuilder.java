@@ -1,10 +1,10 @@
-package com.jagrosh.jmusicbot.commands.commandBuilder.music;
+package com.jagrosh.jmusicbot.commands.commandbuilder.music;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
-import com.jagrosh.jmusicbot.commands.commandBuilder.CommandsBuilder;
+import com.jagrosh.jmusicbot.commands.commandbuilder.CommandsBuilder;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.music.*;
 
@@ -12,7 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCommandArgument> {
+public class MusicCommandsBuilder extends CommandsBuilder<Command, MusicCommandArgument> {
+
+    public enum CATEGORY {
+        NORMAL              ,
+        DJ
+    }
 
     private Argument<MusicCommandArgument> argument;
     private final List<Command> createdCommands;
@@ -29,7 +34,7 @@ public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCom
     }
 
     @Override
-    public Collection<Command> Build() {
+    public Collection<Command> build() {
         Collection<Command> commands = new ArrayList<>(createdCommands);
         createdCommands.clear();
 
@@ -37,14 +42,8 @@ public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCom
     }
 
     public MusicCommandsBuilder setEmogi(String emogi) {
-        this.argument = new Argument<MusicCommandArgument>(new MusicCommandArgument(this.argument.GetArgument().getPlayers(), emogi));
+        this.argument = new Argument<MusicCommandArgument>(new MusicCommandArgument(this.argument.getArgument().getPlayers(), emogi));
         return this;
-    }
-
-    public enum CATEGORY
-    {
-        NORMAL              ,
-        DJ
     }
 
     // Add Commands
@@ -139,7 +138,7 @@ public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCom
         }
     }
     private MusicCommand initializeCmd(MusicCommand cmd, Argument<MusicCommandArgument> argument) {
-        cmd.initialize(argument.GetArgument());
+        cmd.initialize(argument.getArgument());
         return cmd;
     }
 }

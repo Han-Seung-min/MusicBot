@@ -28,7 +28,7 @@ import com.jagrosh.jmusicbot.audio.PlayerConfig;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
 import com.jagrosh.jmusicbot.commands.admin.*;
-import com.jagrosh.jmusicbot.commands.commandBuilder.music.MusicCommandsBuilder;
+import com.jagrosh.jmusicbot.commands.commandbuilder.music.MusicCommandsBuilder;
 import com.jagrosh.jmusicbot.commands.general.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
@@ -158,7 +158,7 @@ public class JMusicBot
                     .addSkiptoCmd()
                     .addStopCmd()
                     .addVolumeCmd()
-                .Build()
+                .build()
         );
 
         commands.add(new SetdjCmd());
