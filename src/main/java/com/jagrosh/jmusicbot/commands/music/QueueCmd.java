@@ -55,8 +55,8 @@ public class QueueCmd extends MusicCommand
     }
 
     @Override
-    public MusicCommand Initialize(MusicCommandArgument argument) {
-        MusicCommand command = super.Initialize(argument);
+    public MusicCommand initialize(MusicCommandArgument argument) {
+        MusicCommand command = super.initialize(argument);
 
         builder = new Paginator.Builder()
                 .setColumns(1)

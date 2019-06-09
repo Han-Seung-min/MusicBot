@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Role;
@@ -28,6 +27,8 @@ import net.dv8tion.jda.core.entities.Role;
  */
 public final class DJCommand extends Command implements IMusicCommand
 {
+    private MusicCommand musicCommand;
+
     // HACK : DJCommand is used like proxy to avoid inherit MusicCommand.
     public DJCommand(MusicCommand musicCommand)
     {
@@ -48,8 +49,6 @@ public final class DJCommand extends Command implements IMusicCommand
             return dj!=null && (event.getMember().getRoles().contains(dj) || dj.getIdLong()==event.getGuild().getIdLong());
         });
     }
-
-    private MusicCommand musicCommand;
 
     @Override
     protected final void execute(CommandEvent event) {

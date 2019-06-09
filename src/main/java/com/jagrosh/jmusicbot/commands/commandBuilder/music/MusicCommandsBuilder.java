@@ -1,14 +1,12 @@
-package com.jagrosh.jmusicbot.commands.commandBuilder.Builder.music;
+package com.jagrosh.jmusicbot.commands.commandBuilder.music;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.commands.MusicCommandArgument;
-import com.jagrosh.jmusicbot.commands.commandBuilder.Builder.CommandsBuilder;
-import com.jagrosh.jmusicbot.commands.dj.ForceskipCmd;
-import com.jagrosh.jmusicbot.commands.dj.MoveTrackCmd;
-import com.jagrosh.jmusicbot.commands.music.*;
+import com.jagrosh.jmusicbot.commands.commandBuilder.CommandsBuilder;
 import com.jagrosh.jmusicbot.commands.dj.*;
+import com.jagrosh.jmusicbot.commands.music.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,17 +14,17 @@ import java.util.List;
 
 public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCommandArgument> {
 
-    public MusicCommandsBuilder(MusicCommandArgument argument)
-    {
-        Initialize(new Argument<MusicCommandArgument>(argument));
-        createdCommands = new ArrayList<>();
-    }
-
     private Argument<MusicCommandArgument> argument;
     private final List<Command> createdCommands;
 
+    public MusicCommandsBuilder(MusicCommandArgument argument)
+    {
+        initialize(new Argument<MusicCommandArgument>(argument));
+        createdCommands = new ArrayList<>();
+    }
+
     @Override
-    protected void Initialize(Argument<MusicCommandArgument> argument) {
+    protected void initialize(Argument<MusicCommandArgument> argument) {
         this.argument = argument;
     }
 
@@ -136,13 +134,12 @@ public class MusicCommandsBuilder extends CommandsBuilder<MusicCommand, MusicCom
                 createdCommands.add(new DJCommand(initializeCmd(cmd, this.argument)));
                 break;
 
-            default: // default : NORMAL
-                createdCommands.add(initializeCmd(cmd, this.argument));
-                break;
+            default:
+                throw new IllegalArgumentException("Invalid Music Commands Category");
         }
     }
     private MusicCommand initializeCmd(MusicCommand cmd, Argument<MusicCommandArgument> argument) {
-        cmd.Initialize(argument.GetArgument());
+        cmd.initialize(argument.GetArgument());
         return cmd;
     }
 }

@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
@@ -55,8 +54,8 @@ public class SearchCmd extends MusicCommand
     }
 
     @Override
-    public MusicCommand Initialize(MusicCommandArgument argument) {
-        MusicCommand command = super.Initialize(argument);
+    public MusicCommand initialize(MusicCommandArgument argument) {
+        MusicCommand command = super.initialize(argument);
 
         builder = new OrderedMenu.Builder()
                 .allowTextInput(true)

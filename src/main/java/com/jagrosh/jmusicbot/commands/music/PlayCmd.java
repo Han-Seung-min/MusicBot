@@ -56,9 +56,9 @@ public class PlayCmd extends MusicCommand
     }
 
     @Override
-    public MusicCommand Initialize(MusicCommandArgument argument) {
-        MusicCommand inst = super.Initialize(argument);
-        this.children = new Command[]{ new PlaylistCmd().Initialize(argument) };
+    public MusicCommand initialize(MusicCommandArgument argument) {
+        MusicCommand inst = super.initialize(argument);
+        this.children = new Command[]{ new PlaylistCmd().initialize(argument) };
 
         return inst;
     }

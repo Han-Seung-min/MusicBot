@@ -107,7 +107,7 @@ public abstract class MusicCommand extends Command implements IMusicCommand
 		return false;
 	}
 
-	public MusicCommand Initialize(MusicCommandArgument argument)
+	public MusicCommand initialize(MusicCommandArgument argument)
     {
         this.commonArgument = argument;
         return this;
